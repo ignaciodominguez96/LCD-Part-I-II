@@ -246,19 +246,21 @@ class basicLCD
 	bool error;
 	
 
+
+
 	/*=====================================================
-* Name: lcdUpdateCursor ver NOTA 2
-* Entra: -
-* Resulta: Posiciona el cursor del display en la posición
-* dada por (cadd)-1. (cadd) = No se altera
-*
-* El propósito de la función lcdUpdateCursor() es
-* informarle al display del valor de cadd cada vez que es
-* alterado. Esto es necesario pues si llamamos por ejemplo a
-* lcdMoveCursorUp() esta última calculará un nuevo valor
-* para cadd. Este nuevo valor de cadd deberá ser transferido
-* al cursor del display para poder sincronizar ambos.
-*=====================================================*/
+	* Name: lcdUpdateCursor ver NOTA 2
+	* Entra: -
+	* Resulta: Posiciona el cursor del display en la posición
+	* dada por (cadd)-1. (cadd) = No se altera
+	*
+	* El propósito de la función lcdUpdateCursor() es
+	* informarle al display del valor de cadd cada vez que es
+	* alterado. Esto es necesario pues si llamamos por ejemplo a
+	* lcdMoveCursorUp() esta última calculará un nuevo valor
+	* para cadd. Este nuevo valor de cadd deberá ser transferido
+	* al cursor del display para poder sincronizar ambos.
+	*=====================================================*/
 	
 	virtual void lcdUpdateCursor() = 0;
 };
