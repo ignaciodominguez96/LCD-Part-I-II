@@ -20,6 +20,7 @@ void lcdWriteNybble(FT_HANDLE * deviceHandler, unsigned char byte, unsigned char
 //Escribe el byte que recibe en el registro indicado.				//listo
 void lcdWriteByte(FT_HANDLE * deviceHandler, unsigned char byte, unsigned char rs);
 
+
 //listo -verificar si hay que hacer el delay dentro de nybble tambien, capaz lo estas haciendo dos veces y eso puede provocar que no se inicialize ya que no se respeta los tiempos pedidos-
 FT_HANDLE * lcdInit(int num_device)
 {
@@ -138,12 +139,9 @@ FT_HANDLE * lcdInit(int num_device)
 				
 				lcdWriteByte(deviceHandler, LCD_ENTRY_MODE_SET, SET_IR_ON);										//paso 15
 
-				cout << "Se inicializo el display correctamente" << endl;
 			}
 			else
 			{
-				cout << "No se pudo configurar al display: fallo en 'FT_SetBitMode' " << endl;
-
 				FT_Close(deviceHandler);
 				delete deviceHandler;
 				return nullptr;
@@ -158,14 +156,12 @@ FT_HANDLE * lcdInit(int num_device)
 	{
 		//se acabo el tiempo
 
-		cout << "Error: No se pudo abrir el LCD" << endl;
 		delete deviceHandler;
 		return nullptr;
 	}
 
 	return deviceHandler;
 }
-
 
 
 //listo
