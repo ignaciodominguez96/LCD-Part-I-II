@@ -12,13 +12,10 @@
 
 using namespace std;
 
+#define WHICH_LCD "EDA LCD 5"
 
-#error cambiar descripcion
-#define MY_LCD_DESCRIPTION "EDA LCD X X"
 
-#define UCHAR 
-
-#define CONNECTING_TIME 5 //in seconds
+#define CONNECTING_TIME 5 //en segundos lo uso, ya que estoy usando std::chrono::seconds
 
 
 //Defincion de los pins del display.
@@ -47,21 +44,21 @@ using namespace std;
 #define LCD_D7 (UCHAR)(1 << (PIN_P7))
 
 
-//Mascaras.
-#define SET_IR_ON 0x00
-#define SET_DR_ON 0x02
-#define SET_ENABLE_ON ((UCHAR)(LCD_E))
-#define SET_ENABLE_OFF ((UCHAR)(~(LCD_E)))
+//Mascaras para la palabra de control del puerto paralelo
+#define SET_IR_ON			((UCHAR)(LCD_RS ^ LCD_RS))	
+#define SET_DR_ON			((UCHAR)(LCD_RS))	
+#define SET_ENABLE_ON		((UCHAR)(LCD_E))
+#define SET_ENABLE_OFF		((UCHAR)(~(LCD_E)))
 
-#define SET_LCD_D4_ON ((UCHAR)(LCD_D4))			//Activos altos
-#define SET_LCD_D5_ON ((UCHAR)(LCD_D5))
-#define SET_LCD_D6_ON ((UCHAR)(LCD_D6))
-#define SET_LCD_D7_ON ((UCHAR)(LCD_D7))
+#define SET_LCD_D4_ON		((UCHAR)(LCD_D4))			//Activos altos
+#define SET_LCD_D5_ON		((UCHAR)(LCD_D5))
+#define SET_LCD_D6_ON		((UCHAR)(LCD_D6))
+#define SET_LCD_D7_ON		((UCHAR)(LCD_D7))
 
-#define SET_LCD_D4_OFF ((UCHAR)(LCD_D4 ^ LCD_D4))	//Desactivar bajos  
-#define SET_LCD_D5_OFF ((UCHAR)(LCD_D5 ^ LCD_D5))
-#define SET_LCD_D6_OFF ((UCHAR)(LCD_D6 ^ LCD_D6))
-#define SET_LCD_D7_OFF ((UCHAR)(LCD_D7 ^ LCD_D7))
+#define SET_LCD_D4_OFF		((UCHAR)(LCD_D4 ^ LCD_D4))	//Desactivar bajos  
+#define SET_LCD_D5_OFF		((UCHAR)(LCD_D5 ^ LCD_D5))
+#define SET_LCD_D6_OFF		((UCHAR)(LCD_D6 ^ LCD_D6))
+#define SET_LCD_D7_OFF		((UCHAR)(LCD_D7 ^ LCD_D7))
 
 #define MASK_LEDS ((UCHAR)(LCD_D4 | LCD_D5 | LCD_D6 | LCD_D7)) //elegir solamente data
 #define NOT_MASK_LEDS ((UCHAR)(~(MASK_LEDS)))		 //elegir todo menos data
@@ -101,9 +98,30 @@ using namespace std;
 #define	LCD_WRITE_DATA_TO_CG_OR_DDRAM		((UCHAR)(BIT9))									
 #define	LCD_READ_DATA_FROM_CG_OR_DDRAM		((UCHAR)(BIT9|BIT8))
 
-using namespace std::this_thread;
-using namespace std::chrono_literals;
-using std::chrono::system_clock;
+
+//especificaciones de cada instrucción
+
+#define MASK_HIGH_PART_BYTE ((UCHAR)0xF0)
+#define MASK_ALL_BITS_BYTE	((UCHAR)0xFF)
+
+#define LCD_FUNCTION_SET_DL_8BITS			((UCHAR)(BIT4))
+#define LCD_FUNCTION_SET_DL_4BITS			((UCHAR)(BIT4^BIT4))
+#define LCD_FUNCTION_SET_N_2_LINES			((UCHAR)(BIT4))
+#define LCD_FUNCTION_SET_N_1_LINES			((UCHAR)(BIT4^BIT4))
+#define LCD_FUNCTION_SET_FONT_5x10			((UCHAR)(BIT4))
+#define LCD_FUNCTION_SET_FONT_5x8			((UCHAR)(BIT4^BIT4))
+
+
+#define LCD_DISPLAY_CONTROL_DISPLAY_ON		((UCHAR)(BIT2))
+#define LCD_DISPLAY_CONTROL_DISPLAY_OFF		((UCHAR)(BIT2^BIT2))
+#define LCD_DISPLAY_CONTROL_CURSOR_ON		((UCHAR)(BIT1))
+#define LCD_DISPLAY_CONTROL_CURSOR_OFF		((UCHAR)(BIT1^BIT1))
+#define	LCD_DISPLAY_CONTROL_BLINK_ON		((UCHAR)(BIT0))
+#define	LCD_DISPLAY_CONTROL_BLINK_OFF		((UCHAR)(BIT0^BIT0))
+
+#define LCD_SETBITMODE_ASYNCHRONOUS	1
+
+
 
 //Inicializa el FTDI y el LCD
 FT_HANDLE * lcdInit(int iDevice);

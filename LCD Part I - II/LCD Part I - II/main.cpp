@@ -4,6 +4,9 @@
 #include "HAL.h"
 #include "HitachiLCD.h"
 
+using namespace std;
+
+
 int main(void)
 {
 	HitachiLCD lcd(2);
@@ -14,15 +17,15 @@ int main(void)
 	}
 	char c = 0;
 	cursorPosition pos;
-	std::cout << "Press W to Move Cursor Up" << std::endl;
-	std::cout << "Press A to Move Cursor Left" << std::endl;
-	std::cout << "Press S to Move Cursor Down" << std::endl;
-	std::cout << "Press D to Move Cursor Right" << std::endl;
-	std::cout << "Press C to Clear" << std::endl;
-	std::cout << "Press X to Clear to End of Line" << std::endl;
-	std::cout << "Press G  to print Cursor Position in cmd" << std::endl;
-	std::cout << "Press Q to exit" << std::endl;
-	std::cout << "Press any other letter to print to LCD" << std::endl;
+	cout << "Press W to Move Cursor Up" << endl;
+	cout << "Press A to Move Cursor Left" << endl;
+	cout << "Press S to Move Cursor Down" << endl;
+	cout << "Press D to Move Cursor Right" << endl;
+	cout << "Press C to Clear" << endl;
+	cout << "Press X to Clear to End of Line" << endl;
+	cout << "Press G  to print Cursor Position in cmd" << endl;
+	cout << "Press Q to exit" << endl;
+	cout << "Press any other letter to print to LCD" << endl;
 
 	do
 	{
@@ -51,8 +54,8 @@ int main(void)
 				break;
 			case 'g':
 				pos = lcd.lcdGetCursorPosition();
-				std::cout << "Column: " << pos.column << std::endl;
-				std::cout << "Row: " << pos.row << endl;
+				cout << "Column: " << pos.column << endl;
+				cout << "Row: " << pos.row << endl;
 				break;
 			case 'q':
 				break;
@@ -62,19 +65,19 @@ int main(void)
 			}
 		}
 	} while (c != 'q');
-	std::cout << "Begining of strings test in LCD..." << std::endl;
-	sleep_for(10ms);
+	cout << "Begining of strings test in LCD..." << endl;
+	this_thread::sleep_for(10ms);
 	const char h[] = "demo de const char * ";
 	lcd << h;
 	lcd.lcdClear();
 	lcd << "demo de cstring.......";
-	sleep_for(10ms);
+	this_thread::sleep_for(10ms);
 	string str = "demo de str_c++";
 	lcd.lcdClear();
 	lcd << str;
-	sleep_for(10ms);
+	this_thread::sleep_for(10ms);
 	lcd.lcdClear();
-	sleep_for(50ms);
+	this_thread::sleep_for(50ms);
 	std::cout << "Press enter to Quit..." << std::endl;
 	return 0;
 }
