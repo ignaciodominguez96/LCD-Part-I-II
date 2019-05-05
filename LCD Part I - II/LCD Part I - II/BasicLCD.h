@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <string>
+#define FTD2XX_EXPORTS
+#include "ftd2xx.h"
 
 //Modulo que contiene la estructura de una clase abstracta que compone un LCD
 //cualquiera.
@@ -62,7 +64,7 @@ class basicLCD
 	* Caso contrario devuelve en su nombre el error que se
 	* haya producido trabajando con la librería ftd2xx
 	*=====================================================*/
-	virtual bool lcdGetError() = 0;
+	virtual FT_STATUS lcdGetError() = 0;
 
 
 

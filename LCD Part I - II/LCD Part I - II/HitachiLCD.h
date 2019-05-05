@@ -1,7 +1,5 @@
 #pragma once
 
-#define FTD2XX_EXPORTS
-#include "ftd2xx.h"
 #include <iostream>
 #include <string>
 //Modulo que contiene la estructura del  display Hitachi HD44780. 
@@ -15,7 +13,7 @@ public:
 	HitachiLCD(int iDevice);
 	virtual ~HitachiLCD();
 	virtual bool lcdInitOk();
-	virtual bool lcdGetError();
+	virtual FT_STATUS lcdGetError();
 	virtual bool lcdClear();
 	virtual bool lcdClearToEOL();
 	virtual basicLCD& operator<<(const char c);
