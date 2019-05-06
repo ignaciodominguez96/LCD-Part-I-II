@@ -4,7 +4,7 @@
 
 #define BEGIN_OF_FIRST_LINE 1			
 #define END_OF_FIRST_LINE 16		
-#define BEGIN_OF_SECOND_LINE 64		
+#define BEGIN_OF_SECOND_LINE 65		
 #define END_OF_SECOND_LINE 80		
 #define LINES_GAP (BEGIN_OF_SECOND_LINE-END_OF_FIRST_LINE)
 #define TOTAL_RANGE			((cadd >= BEGIN_OF_FIRST_LINE) && (cadd <= END_OF_SECOND_LINE))
@@ -295,6 +295,7 @@ bool HitachiLCD::lcdSetCursorPosition(const cursorPosition pos)
 cursorPosition HitachiLCD::lcdGetCursorPosition()
 {
 	cursorPosition currPos;
+
 	if (IS_ON_FIRST_LINE(cadd))
 	{
 		currPos.row = 1;
