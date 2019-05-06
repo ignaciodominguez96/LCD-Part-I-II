@@ -13,7 +13,9 @@
 
 using namespace std;
 
-#define WHICH_LCD "Dual RS232 B"
+#define WHICH_LCD "Dual RS232 B" //estamos usando esta descripcion ya que no tiene la memoria EEPROM con la descripcion que menciona la catedra
+
+//use funcion de https://www.ftdichip.com/Support/Knowledgebase/index.html?ft_listdevices.htm
 
 //#define WHICH_LCD "EDA LCD 6 B"
 

@@ -156,7 +156,6 @@ FT_HANDLE * lcdInit(void)
 		}
 		else
 		{
-			cout << "No abre FT_OPEN" << endl;
 			cout << status << endl;
 		}
 
