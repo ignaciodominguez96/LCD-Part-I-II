@@ -22,7 +22,7 @@ void lcdWriteByte(FT_HANDLE * deviceHandler, unsigned char byte, unsigned char r
 
 
 //listo -verificar si hay que hacer el delay dentro de nybble tambien, capaz lo estas haciendo dos veces y eso puede provocar que no se inicialize ya que no se respeta los tiempos pedidos-
-FT_HANDLE * lcdInit(int num_device)
+FT_HANDLE * lcdInit(void)
 {
 
 	/*
@@ -67,7 +67,7 @@ FT_HANDLE * lcdInit(int num_device)
 
 	while ((status != FT_OK) && ((current - start) < max_time_to_connect))			//busco conectarme al display
 	{
-		status = FT_OpenEx((void *) WHICH_LCD, num_device, deviceHandler);
+		status = FT_OpenEx((void *) WHICH_LCD, FT_OPEN_BY_DESCRIPTION, deviceHandler);
 
 		if (status == FT_OK)
 		{
@@ -139,6 +139,12 @@ FT_HANDLE * lcdInit(int num_device)
 				
 				lcdWriteByte(deviceHandler, LCD_ENTRY_MODE_SET, SET_IR_ON);										//paso 15
 
+				this_thread::sleep_for(DELAY_10MS);																
+
+				
+
+
+
 			}
 			else
 			{
@@ -148,8 +154,14 @@ FT_HANDLE * lcdInit(int num_device)
 			}
 
 		}
+		else
+		{
+			cout << "No abre FT_OPEN" << endl;
+			cout << status << endl;
+		}
 
 		current = chrono::system_clock::now();
+
 	}
 
 	if (status != FT_OK) //sali del loop, ¿me pude conectar o se acabo el tiempo?

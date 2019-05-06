@@ -1,6 +1,7 @@
 #pragma once
 #include<cstdio>
 #include<windows.h>
+
 #define FTD2XX_EXPORTS
 
 #include <chrono>
@@ -12,7 +13,9 @@
 
 using namespace std;
 
-#define WHICH_LCD "EDA LCD 5"
+#define WHICH_LCD "Dual RS232 B"
+
+//#define WHICH_LCD "EDA LCD 6 B"
 
 
 #define CONNECTING_TIME 5 //en segundos lo uso, ya que estoy usando std::chrono::seconds
@@ -124,7 +127,7 @@ using namespace std;
 
 
 //Inicializa el FTDI y el LCD
-FT_HANDLE * lcdInit(int iDevice);
+FT_HANDLE * lcdInit(void);
 
 //Escribe un byte al IR
 void lcdWriteIR(FT_HANDLE * deviceHandler, unsigned char valor);

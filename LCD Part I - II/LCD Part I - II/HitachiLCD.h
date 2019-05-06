@@ -10,7 +10,7 @@
 class HitachiLCD : public basicLCD
 {
 public:
-	HitachiLCD(int iDevice);
+	HitachiLCD(void);
 	virtual ~HitachiLCD();
 	virtual bool lcdInitOk();
 	virtual FT_STATUS lcdGetError();
@@ -27,7 +27,7 @@ public:
 	virtual cursorPosition lcdGetCursorPosition();
 
 private:
-	bool Init;
+	bool can_init;
 	FT_HANDLE * device_handler;
 	virtual void lcdUpdateCursor();
 	unsigned char Hcadd();

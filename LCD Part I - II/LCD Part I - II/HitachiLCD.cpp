@@ -15,22 +15,26 @@
 #define CANT_ROW 2
 #define CANT_COL 16
 
-HitachiLCD::HitachiLCD(int iDevice)
+HitachiLCD::HitachiLCD(void)
 {
-	Init = false;
-	error = true;
-	device_handler = lcdInit(iDevice);
+
+
+	this->can_init = false;
+	this->error = true;
+	device_handler = lcdInit();
 	if (device_handler != nullptr)
 	{
-		Init = true; //Se inicializo y configuro exitosamente la inicializacion.
-		error = false;
+		this->can_init = true; //Se inicializo y configuro exitosamente la inicializacion.
+		this->error = false;
 	}
-	cadd = 1;
+	
+	
+	cadd = BEGIN_OF_FIRST_LINE;
 }
 
 HitachiLCD:: ~HitachiLCD()
 {
-	if (Init)
+	if (this->can_init == true)
 	{
 		FT_Close(*device_handler);
 		delete device_handler;
@@ -40,7 +44,7 @@ HitachiLCD:: ~HitachiLCD()
 
 bool HitachiLCD::lcdInitOk()
 {
-	return Init;
+	return this->can_init;
 }
 
 FT_STATUS HitachiLCD::lcdGetError()
@@ -48,31 +52,38 @@ FT_STATUS HitachiLCD::lcdGetError()
 	FT_STATUS state = FT_GetStatus(*device_handler, nullptr, nullptr, nullptr);
 	if (state != FT_OK)
 	{
-		error = true;
+		this->error = true;
 	}
 	return state;
 }
 
+
+//listo
 bool HitachiLCD::lcdClear()
 {
-	bool ret = false;
+	bool can_clear_display = false;
+
 	FT_STATUS state = FT_OK;
+	
 	lcdWriteIR(device_handler, LCD_CLEAR);
+	
 	if (state == FT_OK)
 	{
-		cadd = 1;
-		ret = true;
+		this->cadd = BEGIN_OF_FIRST_LINE;
+		can_clear_display = true;
 	}
 	else
 	{
-		error = true;
+		this->error = true;
 	}
-	return ret;
+	return can_clear_display;
 }
 
+
+//listo
 bool HitachiLCD::lcdClearToEOL()
 {
-	bool ret = false;
+	bool can_clear_to_eol = false;
 	int cadd_aux = cadd;
 	int limit = 0;
 	if (IS_ON_FIRST_LINE(cadd))
@@ -86,53 +97,66 @@ bool HitachiLCD::lcdClearToEOL()
 	else
 	{
 		std::cout << "ERROR: Cursor Overflow" << std::endl;
-		error = true;
-		ret = true;
+		this->error = true;
 	}
-	if (!error)
+
+
+
+	if (this->error == false)
 	{
+		can_clear_to_eol = true;
+
 		for (; cadd <= limit ; cadd++)
 		{
 			lcdWriteDR(device_handler, ' '); //imprimo espacios, simulando que borro el display, letra por letra.
 		}
+
 		cadd = cadd_aux; //regreso el cursor a la posición que tenia antes de ejecutar la función.
 		lcdUpdateCursor();
 	}
 
-	return ret;  //devuelve true si hubo error, false si no hubo error
+	return can_clear_to_eol;  //devuelve true si hubo error, false si no hubo error
 
 }
+
+
 
 basicLCD& HitachiLCD::operator<<(const char c)
 {
 	lcdWriteDR((this->device_handler), c);
 	cadd++;
-	if (cadd == END_OF_FIRST_LINE + 1)
+
+	if (cadd == (END_OF_FIRST_LINE + 1))
 	{
-		cadd == BEGIN_OF_SECOND_LINE;
+		cadd = BEGIN_OF_SECOND_LINE;
 	}
 	if (cadd == (END_OF_SECOND_LINE + 1))
 	{
 		cadd = BEGIN_OF_FIRST_LINE;
 	}
+
 	lcdUpdateCursor();
 	return *this;
 };
 
 basicLCD& HitachiLCD::operator<<(const char * c)
 {
-	for (int i; c[i] != '\0'; i++)
+	for (int i = 0; c[i] != '\0'; i++)
 	{
 		lcdWriteDR((this->device_handler), c[i]);
 		cadd++;
-		if (cadd == END_OF_FIRST_LINE + 1)
+		
+		if (cadd == (END_OF_FIRST_LINE + 1))
 		{
-			cadd == BEGIN_OF_SECOND_LINE;
+			cadd = BEGIN_OF_SECOND_LINE;
 		}
 		if (cadd == (END_OF_SECOND_LINE + 1))
 		{
 			cadd = BEGIN_OF_FIRST_LINE;
 		}
+
+
+
 		lcdUpdateCursor();
 	}
 	return *this;
@@ -143,15 +167,19 @@ basicLCD& HitachiLCD::operator<<(std::string str)
 	for (unsigned int i = 0; i < str.size(); i++)
 	{
 		lcdWriteDR((this->device_handler), str[i]);
+		
+		
 		cadd++;
-		if (cadd == END_OF_FIRST_LINE + 1)
+		
+		if (cadd == (END_OF_FIRST_LINE + 1))
 		{
-			cadd == BEGIN_OF_SECOND_LINE;
+			cadd = BEGIN_OF_SECOND_LINE;
 		}
 		if (cadd == (END_OF_SECOND_LINE + 1))
 		{
 			cadd = BEGIN_OF_FIRST_LINE;
 		}
+
 		lcdUpdateCursor();
 	}
 
@@ -202,6 +230,7 @@ bool HitachiLCD::lcdMoveCursorRight()
 {
 	bool ret = true;
 	cadd++;
+
 	if (cadd == END_OF_FIRST_LINE + 1)		
 	{
 		cadd = BEGIN_OF_SECOND_LINE;		
@@ -239,18 +268,18 @@ bool HitachiLCD::lcdSetCursorPosition(const cursorPosition pos)
 	bool ret = true;
 	switch (pos.row)
 	{
-	case 1:
+		case 1:
 		{
 			cadd = pos.column;
 			break;
 		}
 		
-	case 2:
+		case 2:
 		{
 			cadd = pos.column + (LINES_GAP + CANT_COL);
 			break;
 		}
-	default:
+		default:
 		{
 			ret = false;
 		}
