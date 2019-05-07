@@ -8,10 +8,11 @@
 //Modulo que contiene la estructura de una clase abstracta que compone un LCD
 //cualquiera.
 
-struct cursorPosition
+class cursorPosition
 {
-	int row;
-	int col;
+	public:
+		int row;
+		int col;
 };
 
 
