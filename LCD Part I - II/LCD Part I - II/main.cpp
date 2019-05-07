@@ -23,15 +23,15 @@ int main(void)
 	}
 	char c = 0;
 	cursorPosition pos;
-	cout << "Press W to Move Cursor Up" << endl;
-	cout << "Press A to Move Cursor Left" << endl;
-	cout << "Press S to Move Cursor Down" << endl;
-	cout << "Press D to Move Cursor Right" << endl;
-	cout << "Press C to Clear" << endl;
-	cout << "Press X to Clear to End of Line" << endl;
-	cout << "Press G  to print Cursor Position in cmd" << endl;
-	cout << "Press Q to exit" << endl;
-	cout << "Press any other letter to print to LCD" << endl;
+	cout << "Presione W para mover el cursor arriba" << endl;
+	cout << "Presione S para mover el cursor abajo" << endl;
+	cout << "Presione A para mover el cursor a la izquierda" << endl;
+	cout << "Presione D para mover el cursor a la derecha" << endl;
+	cout << "Presione C para borrar" << endl;
+	cout << "Presione X para borrar todo" << endl;
+	cout << "Presione G para ver la posicion del cursos en la linea de comandos" << endl;
+	cout << "Presione Q para salir" << endl;
+	cout << "Presione cualquier otra tecla para mostrar el mensaje en el LCD" << endl;
 
 
 	lcd << " ";
@@ -67,15 +67,15 @@ int main(void)
 				break;
 			case 'g':
 				pos = lcd.lcdGetCursorPosition();
-				cout << "Column: " << pos.col << endl;
-				cout << "Row: " << pos.row << endl;
+				cout << "Columna: " << pos.col << endl;
+				cout << "Fila: " << pos.row << endl;
 				break;
 			case 'q':
 				break;
 			default:
 				
 				pos = lcd.lcdGetCursorPosition();
-				cout << "Row: " << pos.row << " , Column: " << pos.col << endl;
+				cout << "Fila: " << pos.row << " , Columna: " << pos.col << endl;
 			
 				lcd << c;
 
@@ -88,14 +88,14 @@ int main(void)
 
 
 
-	cout << "Begining of strings test in LCD..." << endl;
-	this_thread::sleep_for(10ms);
-	const char h[] = "demo de const char * ";
+	cout << "comienza prueba de mensajes" << endl;
+	this_thread::sleep_for(10ms);						//se prueban los 3 formas para pasarle a lcd <<
+	const char h[] = "puntero a const char";          //guarda el mensaje que luego va a mostrar el display en un arreglo
 	lcd << h;
 	lcd.lcdClear();
-	lcd << "demo de cstring.......";
+	lcd << "probando mensaje"; 					//se le pasa directamente el mensaje a lcd <<
 	this_thread::sleep_for(1000ms);
-	string str = "demo de str_c++";
+	string str = "probando tipo string";			//se guarda un tipo string para luego mostralo en el display
 	lcd.lcdClear();
 	lcd << str;
 	this_thread::sleep_for(1000ms);
