@@ -67,7 +67,7 @@ int main(void)
 				break;
 			case 'g':
 				pos = lcd.lcdGetCursorPosition();
-				cout << "Column: " << pos.column << endl;
+				cout << "Column: " << pos.col << endl;
 				cout << "Row: " << pos.row << endl;
 				break;
 			case 'q':
@@ -75,7 +75,7 @@ int main(void)
 			default:
 				
 				pos = lcd.lcdGetCursorPosition();
-				cout << "Row: " << pos.row << " , Column: " << pos.column << endl;
+				cout << "Row: " << pos.row << " , Column: " << pos.col << endl;
 			
 				lcd << c;
 

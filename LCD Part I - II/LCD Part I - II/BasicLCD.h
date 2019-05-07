@@ -11,7 +11,7 @@
 struct cursorPosition
 {
 	int row;
-	int column;
+	int col;
 };
 
 

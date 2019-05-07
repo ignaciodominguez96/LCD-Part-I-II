@@ -1,19 +1,14 @@
 #include "HitachiLCD.h"
 
-#define ERROR_HCADD 0xFF
-
-#define BEGIN_OF_FIRST_LINE 1			
-#define END_OF_FIRST_LINE 16		
-#define BEGIN_OF_SECOND_LINE 65		
-#define END_OF_SECOND_LINE 80		
-#define LINES_GAP (BEGIN_OF_SECOND_LINE-END_OF_FIRST_LINE)
-#define TOTAL_RANGE			((cadd >= BEGIN_OF_FIRST_LINE) && (cadd <= END_OF_SECOND_LINE))
-#define IS_ON_FIRST_LINE(x) (((x >= BEGIN_OF_FIRST_LINE) && (x <= END_OF_FIRST_LINE)))
-#define IS_ON_SECOND_LINE(x) (((x >= BEGIN_OF_SECOND_LINE) && (x <= END_OF_SECOND_LINE)))
+#define BEGIN_FIRST_LINE 1			
+#define END_FIRST_LINE 16		
+#define BEGIN_SECOND_LINE 65		
+#define END_SECOND_LINE 80		
 #define MIN_COL 1
 #define MAX_COL 16
-#define CANT_ROW 2
-#define CANT_COL 16
+#define LINES_GAP (BEGIN_SECOND_LINE-END_FIRST_LINE)
+#define ON_FIRST_LINE(a) (((a >= BEGIN_FIRST_LINE) && (a <= END_FIRST_LINE)))
+#define ON_SECOND_LINE(a) (((a >= BEGIN_SECOND_LINE) && (a <= END_SECOND_LINE)))
 
 
 //listo
@@ -26,12 +21,12 @@ HitachiLCD::HitachiLCD(void)
 	device_handler = lcdInit();
 	if (device_handler != nullptr)
 	{
-		this->can_init = true; //Se inicializo y configuro exitosamente la inicializacion.
+		this->can_init = true; //Se inicializo bien
 		this->error = false;
 	}
 	
 	
-	cadd = BEGIN_OF_FIRST_LINE;
+	cadd = BEGIN_FIRST_LINE;
 }
 
 //listo
@@ -75,7 +70,7 @@ bool HitachiLCD::lcdClear()
 	
 	if (state == FT_OK)
 	{
-		this->cadd = BEGIN_OF_FIRST_LINE;
+		this->cadd = BEGIN_FIRST_LINE;
 		can_clear_display = true;
 	}
 	else
@@ -92,13 +87,13 @@ bool HitachiLCD::lcdClearToEOL()
 	bool can_clear_to_eol = false;
 	int cadd_aux = cadd;
 	int limit = 0;
-	if (IS_ON_FIRST_LINE(cadd))
+	if (ON_FIRST_LINE(cadd))
 	{
-		limit = END_OF_FIRST_LINE;
+		limit = END_FIRST_LINE;
 	}
-	else if (IS_ON_SECOND_LINE(cadd))
+	else if (ON_SECOND_LINE(cadd))
 	{
-		limit = END_OF_SECOND_LINE;
+		limit = END_SECOND_LINE;
 	}
 	else
 	{
@@ -132,13 +127,13 @@ basicLCD& HitachiLCD::operator<<(const char c)
 	lcdWriteDR((this->device_handler), c);
 	cadd++;
 
-	if (cadd == (END_OF_FIRST_LINE + 1))
+	if (cadd == (END_FIRST_LINE + 1))
 	{
-		cadd = BEGIN_OF_SECOND_LINE;
+		cadd = BEGIN_SECOND_LINE;
 	}
-	if (cadd == (END_OF_SECOND_LINE + 1))
+	if (cadd == (END_SECOND_LINE + 1))
 	{
-		cadd = BEGIN_OF_FIRST_LINE;
+		cadd = BEGIN_FIRST_LINE;
 	}
 
 	lcdUpdateCursor();
@@ -154,13 +149,13 @@ basicLCD& HitachiLCD::operator<<(const char * c)
 		lcdWriteDR((this->device_handler), c[i]);
 		cadd++;
 		
-		if (cadd == (END_OF_FIRST_LINE + 1))
+		if (cadd == (END_FIRST_LINE + 1))
 		{
-			cadd = BEGIN_OF_SECOND_LINE;
+			cadd = BEGIN_SECOND_LINE;
 		}
-		if (cadd == (END_OF_SECOND_LINE + 1))
+		if (cadd == (END_SECOND_LINE + 1))
 		{
-			cadd = BEGIN_OF_FIRST_LINE;
+			cadd = BEGIN_FIRST_LINE;
 		}
 
 
@@ -181,13 +176,13 @@ basicLCD& HitachiLCD::operator<<(std::string str)
 		
 		cadd++;
 		
-		if (cadd == (END_OF_FIRST_LINE + 1))
+		if (cadd == (END_FIRST_LINE + 1))
 		{
-			cadd = BEGIN_OF_SECOND_LINE;
+			cadd = BEGIN_SECOND_LINE;
 		}
-		if (cadd == (END_OF_SECOND_LINE + 1))
+		if (cadd == (END_SECOND_LINE + 1))
 		{
-			cadd = BEGIN_OF_FIRST_LINE;
+			cadd = BEGIN_FIRST_LINE;
 		}
 
 		lcdUpdateCursor();
@@ -200,15 +195,15 @@ basicLCD& HitachiLCD::operator<<(std::string str)
 //listo
 bool HitachiLCD::lcdMoveCursorUp()
 {
-	if (IS_ON_FIRST_LINE(cadd)) //primer línea del LCD
+	if (ON_FIRST_LINE(cadd)) //primer línea del LCD
 	{
 		return false; //no se puede mover hacia arriba
 	}
-	else if (IS_ON_SECOND_LINE(cadd))  //segunda línea del LCD
+	else if (ON_SECOND_LINE(cadd))  //segunda línea del LCD
 	{
 		cursorPosition newPos;
 		newPos.row = 1;
-		newPos.column = cadd - (LINES_GAP + CANT_COL) + 1;
+		newPos.col = cadd - (LINES_GAP + MAX_COL) + 1;
 		lcdSetCursorPosition(newPos);
 		return true;
 	}
@@ -222,15 +217,15 @@ bool HitachiLCD::lcdMoveCursorUp()
 //listo
 bool HitachiLCD::lcdMoveCursorDown()
 {
-	if (IS_ON_FIRST_LINE(cadd)) //primer línea del LCD
+	if (ON_FIRST_LINE(cadd)) //primer línea del LCD
 	{
 		cursorPosition newPos;
-		newPos.column = cadd - 1;
+		newPos.col = cadd - 1;
 		newPos.row = 2;
 		lcdSetCursorPosition(newPos);
 		return true;
 	}
-	else if (IS_ON_SECOND_LINE(cadd))  //segunda línea del LCD
+	else if (ON_SECOND_LINE(cadd))  //segunda línea del LCD
 	{
 		return false; //no se puede mover hacia abajo
 	}
@@ -247,13 +242,13 @@ bool HitachiLCD::lcdMoveCursorRight()
 	bool ret = true;
 	cadd++;
 
-	if (cadd == (END_OF_FIRST_LINE + 1))		
+	if (cadd == (END_FIRST_LINE + 1))		
 	{
-		cadd = BEGIN_OF_SECOND_LINE;		
+		cadd = BEGIN_SECOND_LINE;		
 	}
-	if (cadd == (END_OF_SECOND_LINE + 1))		//Si estaba en el final de la segunda fila
+	if (cadd == (END_SECOND_LINE + 1))		//Si estaba en el final de la segunda fila
 	{
-		cadd = END_OF_SECOND_LINE;		//Lo deja ahi y devuelve false indicando que no pudo moverlo
+		cadd = END_SECOND_LINE;		//Lo deja ahi y devuelve false indicando que no pudo moverlo
 		ret = false;
 	}
 	lcdUpdateCursor();
@@ -264,13 +259,13 @@ bool HitachiLCD::lcdMoveCursorRight()
 bool HitachiLCD::lcdMoveCursorLeft()
 {
 	bool ret = true;
-	if (cadd == BEGIN_OF_FIRST_LINE)	//si esta en el principio de la primer linea
+	if (cadd == BEGIN_FIRST_LINE)	//si esta en el principio de la primer linea
 	{
-		ret=false;		//no puede moverlo
+		ret=false;		//Lo deja ahi y devuelve false indicando que no pudo moverlo
 	}
-	else if (cadd == (BEGIN_OF_SECOND_LINE))	
+	else if (cadd == (BEGIN_SECOND_LINE))	
 	{
-		cadd = END_OF_FIRST_LINE;
+		cadd = END_FIRST_LINE;
 	}
 	else
 	{
@@ -287,13 +282,13 @@ bool HitachiLCD::lcdSetCursorPosition(const cursorPosition pos)
 	{
 		case 1:
 		{
-			cadd = pos.column;
+			cadd = pos.col;
 			break;
 		}
 		
 		case 2:
 		{
-			cadd = pos.column + (LINES_GAP + CANT_COL);
+			cadd = pos.col + (LINES_GAP + MAX_COL);
 			break;
 		}
 		default:
@@ -301,7 +296,7 @@ bool HitachiLCD::lcdSetCursorPosition(const cursorPosition pos)
 			ret = false;
 		}
 	}
-	if (pos.column > MAX_COL || pos.column < MIN_COL)
+	if (pos.col > MAX_COL || pos.col < MIN_COL)
 	{
 		ret = false;
 	}
@@ -311,44 +306,44 @@ bool HitachiLCD::lcdSetCursorPosition(const cursorPosition pos)
 
 cursorPosition HitachiLCD::lcdGetCursorPosition()
 {
-	cursorPosition currPos;
+	cursorPosition pos;
 
-	if (IS_ON_FIRST_LINE(cadd))
+	if (ON_FIRST_LINE(cadd))
 	{
-		currPos.row = 1;
-		currPos.column = cadd;
+		pos.row = 1;
+		pos.col = cadd;
 	}
-	else if (IS_ON_SECOND_LINE(cadd))
+	else if (ON_SECOND_LINE(cadd))
 	{
-		currPos.column = cadd - (LINES_GAP + CANT_COL);
-		currPos.row = 2;
+		pos.col = cadd - (LINES_GAP + MAX_COL);
+		pos.row = 2;
 	}
 	else
 	{
-		currPos.column = -1;
-		currPos.row = -1;
+		pos.col = -1;
+		pos.row = -1;
 	}
-	return currPos;
+	return pos;
 }
 
 void HitachiLCD::lcdUpdateCursor()
 {
-	lcdWriteIR(device_handler, LCD_SET_DDRAM_ADRESS | Hcadd());
+	lcdWriteIR(device_handler, LCD_SET_DDRAM_ADRESS | cadd_cmd());
 }
 
 
 
 
-unsigned char HitachiLCD::Hcadd()
+unsigned char HitachiLCD::cadd_cmd()
 {
-	char hCadd = 0;
-	if (IS_ON_FIRST_LINE(cadd) || IS_ON_SECOND_LINE(cadd)) //primer o segunda línea del LCD
+	char temp_cadd = 0;
+	if (ON_FIRST_LINE(cadd) || ON_SECOND_LINE(cadd)) //primer o segunda línea del LCD
 	{
-		hCadd = ((char)cadd) - 1;
+		temp_cadd = ((char)cadd) - 1;
 	}
-	else   //el cadd esta fuera del hitachiLCD
+	else   //el cursor esta fuera del LCD
 	{
-		hCadd = (char) ERROR_HCADD;
+		temp_cadd = (char) 0xFF;
 	}
-	return hCadd;
+	return temp_cadd;
 }
