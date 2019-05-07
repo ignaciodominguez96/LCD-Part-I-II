@@ -7,6 +7,9 @@
 using namespace std;
 
 
+void print_lcd_pause(HitachiLCD * lcd, string str);
+
+
 int main(void)
 {
 	HitachiLCD lcd;
@@ -21,6 +24,8 @@ int main(void)
 		getchar();
 		return -1;
 	}
+
+
 	char c = 0;
 	cursorPosition pos;
 	cout << "Presione W para mover el cursor arriba" << endl;
@@ -101,26 +106,18 @@ int main(void)
 	this_thread::sleep_for(1000ms);
 	lcd.lcdClear();
 	this_thread::sleep_for(5000ms);
+	
 
-	str = "Cerrando en";
-	lcd << str;
-	this_thread::sleep_for(1000ms);
-	lcd.lcdClear();
-	str = "3";
-	lcd << str;
-	this_thread::sleep_for(1000ms);
-	lcd.lcdClear();
-	str = "2";
-	lcd << str;
-	this_thread::sleep_for(1000ms);
-	lcd.lcdClear();
-	str = "1";
-	lcd << str;
-	this_thread::sleep_for(1000ms);
-	lcd.lcdClear();
-
-
+	   	 	
 	return 0;
 }
 
 
+
+void print_lcd_pause(HitachiLCD * lcd, string str)
+{
+	lcd->lcdClear();
+	(*lcd) << str;
+	this_thread::sleep_for(1000ms);
+
+}
