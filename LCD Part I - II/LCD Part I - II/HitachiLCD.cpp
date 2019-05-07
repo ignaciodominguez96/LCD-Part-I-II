@@ -328,14 +328,6 @@ cursorPosition HitachiLCD::lcdGetCursorPosition()
 
 void HitachiLCD::lcdUpdateCursor()
 {
-	lcdWriteIR(device_handler, LCD_SET_DDRAM_ADRESS | cadd_cmd());
-}
-
-
-
-
-unsigned char HitachiLCD::cadd_cmd()
-{
 	char temp_cadd = 0;
 	if (ON_FIRST_LINE(cadd) || ON_SECOND_LINE(cadd)) //primer o segunda línea del LCD
 	{
@@ -343,7 +335,8 @@ unsigned char HitachiLCD::cadd_cmd()
 	}
 	else   //el cursor esta fuera del LCD
 	{
-		temp_cadd = (char) 0xFF;
+		temp_cadd = (char)0xFF;
 	}
-	return temp_cadd;
+
+	lcdWriteIR(device_handler, LCD_SET_DDRAM_ADRESS | temp_cadd);
 }

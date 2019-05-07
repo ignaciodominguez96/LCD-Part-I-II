@@ -30,5 +30,4 @@ private:
 	bool can_init;
 	FT_HANDLE * device_handler;
 	virtual void lcdUpdateCursor();
-	unsigned char cadd_cmd();
 };
